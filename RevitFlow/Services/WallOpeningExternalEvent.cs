@@ -39,6 +39,10 @@ public class WallOpeningExternalEvent : IExternalEventHandler
 
         try
         {
+            // 输出当前 ViewModel 的属性值
+            _logger.LogInformation("开始创建洞口 - Shape: {Shape}, Width: {Width}, Height: {Height}, Radius: {Radius}, SillHeight: {SillHeight}",
+                _viewModel.Shape, _viewModel.Width, _viewModel.Height, _viewModel.Radius, _viewModel.SillHeight);
+
             var doc = _uiDocument.Document;
 
             // 选择墙体
@@ -123,7 +127,7 @@ public class WallOpeningExternalEvent : IExternalEventHandler
 
     private void CreateCircularOpening(Document doc, Wall wall, XYZ point)
     {
-        var radius = _viewModel!.Radius / 304.8;
+        var diameter = _viewModel!.Radius * 2 / 304.8;
         var sillHeight = _viewModel.SillHeight / 304.8;
 
         // 获取墙体的标高
@@ -131,9 +135,8 @@ public class WallOpeningExternalEvent : IExternalEventHandler
         if (level == null)
             throw new InvalidOperationException("无法获取墙体标高");
 
-        // 计算圆心位置（相对于标高）
-        var centerZ = level.Elevation + sillHeight + radius;
-        var center = new XYZ(point.X, point.Y, centerZ);
+        // 计算洞口中心的 Z 坐标（相对于标高）
+        var centerZ = level.Elevation + sillHeight + diameter / 2;
 
         // 获取墙体方向
         var locationCurve = wall.Location as LocationCurve;
@@ -141,14 +144,23 @@ public class WallOpeningExternalEvent : IExternalEventHandler
             throw new InvalidOperationException("无法获取墙体位置线");
 
         var wallDir = wallLine.Direction;
+        var halfDiameter = diameter / 2;
 
-        // 创建圆形轮廓
-        var curveArray = new CurveArray();
-        curveArray.Append(Arc.Create(center, radius, 0, Math.PI, wallDir, XYZ.BasisZ));
-        curveArray.Append(Arc.Create(center, radius, Math.PI, 2 * Math.PI, wallDir, XYZ.BasisZ));
+        // 计算洞口的两个对角点（用正方形包围圆形）
+        var point1 = new XYZ(
+            point.X - wallDir.X * halfDiameter,
+            point.Y - wallDir.Y * halfDiameter,
+            centerZ - halfDiameter
+        );
 
-        // 在墙体上创建圆形洞口
-        doc.Create.NewOpening(wall, curveArray, true);
+        var point2 = new XYZ(
+            point.X + wallDir.X * halfDiameter,
+            point.Y + wallDir.Y * halfDiameter,
+            centerZ + halfDiameter
+        );
+
+        // 在墙体上创建正方形洞口（近似圆形）
+        doc.Create.NewOpening(wall, point1, point2);
     }
 
     public string GetName() => "墙体开洞外部事件";

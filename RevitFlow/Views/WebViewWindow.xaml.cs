@@ -161,6 +161,11 @@ public partial class WebViewWindow : Window
             {
                 var value = JsonSerializer.Deserialize(prop.Value.GetRawText(), vmProp.PropertyType);
                 vmProp.SetValue(_viewModel, value);
+                _logger.LogDebug("设置属性: {PropName} = {Value}", propName, value);
+            }
+            else
+            {
+                _logger.LogWarning("无法设置属性: {PropName}", propName);
             }
         }
     }
