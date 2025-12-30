@@ -4,7 +4,8 @@
       "Bash(rm:*)",
       "Bash(ren:*)",
       "WebSearch",
-      "WebFetch(domain:www.revitapidocs.com)"
+      "WebFetch(domain:www.revitapidocs.com)",
+      "Bash(dir:*)"
     ]
   }
 }

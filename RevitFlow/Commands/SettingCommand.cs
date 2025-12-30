@@ -1,7 +1,6 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using RevitFlow.ViewModels;
 using RevitFlow.Views;
 
 namespace RevitFlow.Commands;
@@ -13,10 +12,9 @@ public class SettingCommand : IExternalCommand
     {
         try
         {
-            var viewModel = Host.GetService<SettingViewModel>();
-            var window = Host.GetService<WebViewWindow>();
+            // 从容器获取 Window（自动注入 ViewModel）
+            var window = Host.GetService<SettingWindow>();
             window.Title = "RevitFlow 设置";
-            window.SetViewModel(viewModel, "setting.html");
             window.ShowDialog();
             return Result.Succeeded;
         }

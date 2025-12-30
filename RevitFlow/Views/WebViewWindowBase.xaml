@@ -1,14 +1,13 @@
-<Window x:Class="RevitFlow.Views.WebViewWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<Window x:Class="RevitFlow.Views.WebViewWindowBase" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf" Title="RevitFlow" Width="420"
         Height="460" Background="#1a1a2e" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <!-- 加载提示 -->
         <TextBlock x:Name="LoadingText" HorizontalAlignment="Center" VerticalAlignment="Center"
-                   FontSize="16" Foreground="White" Text="加载中..."
-                   Visibility="Visible" />
-
+                   x:FieldModifier="protected" FontSize="16" Foreground="White"
+                   Text="加载中..." Visibility="Visible" />
         <!-- WebView2 控件 -->
-        <wv2:WebView2 x:Name="WebView" Visibility="Collapsed" />
+        <wv2:WebView2 x:Name="WebView" x:FieldModifier="protected" Visibility="Collapsed" />
     </Grid>
 </Window>

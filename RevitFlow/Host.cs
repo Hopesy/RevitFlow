@@ -37,10 +37,18 @@ public static class Host
         builder.Services.AddTransient<SettingViewModel>();
 
         // Views
-        builder.Services.AddTransient<WebViewWindow>();
+        builder.Services.AddTransient<WallOpeningWindow>();
+        builder.Services.AddTransient<SettingWindow>();
 
         // Services
         builder.Services.AddSingleton<Services.WallOpeningExternalEvent>();
+
+        // ExternalEvent（使用工厂方法创建）
+        builder.Services.AddSingleton(sp =>
+        {
+            var handler = sp.GetRequiredService<Services.WallOpeningExternalEvent>();
+            return Autodesk.Revit.UI.ExternalEvent.Create(handler);
+        });
 
         host = builder.Build();
         host.Start();

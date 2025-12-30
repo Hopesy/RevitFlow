@@ -2,7 +2,6 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Microsoft.Extensions.Logging;
-using RevitFlow.ViewModels;
 
 namespace RevitFlow.Services;
 
@@ -12,41 +11,38 @@ namespace RevitFlow.Services;
 public class WallOpeningExternalEvent : IExternalEventHandler
 {
     private readonly ILogger<WallOpeningExternalEvent> _logger;
-    private WallOpeningViewModel? _viewModel;
-    private UIDocument? _uiDocument;
+
+    // 当前的洞口参数
+    public double Width { get; set; } = 1000;
+    public double Height { get; set; } = 2100;
+    public double SillHeight { get; set; } = 0;
+    public double Radius { get; set; } = 500;
+    public string Shape { get; set; } = "rectangle";
 
     public WallOpeningExternalEvent(ILogger<WallOpeningExternalEvent> logger)
     {
         _logger = logger;
     }
 
-    /// <summary>
-    /// 设置执行参数
-    /// </summary>
-    public void SetParameters(WallOpeningViewModel viewModel, UIDocument uiDocument)
-    {
-        _viewModel = viewModel;
-        _uiDocument = uiDocument;
-    }
-
     public void Execute(UIApplication app)
     {
-        if (_viewModel == null || _uiDocument == null)
+        var uiDocument = app.ActiveUIDocument;
+        if (uiDocument == null)
         {
-            _logger.LogWarning("外部事件参数未设置");
+            _logger.LogWarning("没有活动的文档");
             return;
         }
 
         try
         {
-            // 输出当前 ViewModel 的属性值
+            // 输出当前的参数值
             _logger.LogInformation("开始创建洞口 - Shape: {Shape}, Width: {Width}, Height: {Height}, Radius: {Radius}, SillHeight: {SillHeight}",
-                _viewModel.Shape, _viewModel.Width, _viewModel.Height, _viewModel.Radius, _viewModel.SillHeight);
+                Shape, Width, Height, Radius, SillHeight);
 
-            var doc = _uiDocument.Document;
+            var doc = uiDocument.Document;
 
             // 选择墙体
-            var reference = _uiDocument.Selection.PickObject(
+            var reference = uiDocument.Selection.PickObject(
                 ObjectType.Element,
                 new WallSelectionFilter(),
                 "请选择要开洞的墙体"
@@ -59,12 +55,12 @@ public class WallOpeningExternalEvent : IExternalEventHandler
             }
 
             // 选择位置
-            var point = _uiDocument.Selection.PickPoint("请点击洞口中心位置");
+            var point = uiDocument.Selection.PickPoint("请点击洞口中心位置");
 
             using var trans = new Transaction(doc, "创建墙体洞口");
             trans.Start();
 
-            if (_viewModel.Shape == "circle")
+            if (Shape == "circle")
                 CreateCircularOpening(doc, wall, point);
             else
                 CreateRectangularOpening(doc, wall, point);
@@ -87,9 +83,9 @@ public class WallOpeningExternalEvent : IExternalEventHandler
 
     private void CreateRectangularOpening(Document doc, Wall wall, XYZ point)
     {
-        var width = _viewModel!.Width / 304.8;
-        var height = _viewModel.Height / 304.8;
-        var sillHeight = _viewModel.SillHeight / 304.8;
+        var width = Width / 304.8;
+        var height = Height / 304.8;
+        var sillHeight = SillHeight / 304.8;
 
         // 获取墙体的标高
         var level = doc.GetElement(wall.LevelId) as Level;
@@ -127,8 +123,8 @@ public class WallOpeningExternalEvent : IExternalEventHandler
 
     private void CreateCircularOpening(Document doc, Wall wall, XYZ point)
     {
-        var diameter = _viewModel!.Radius * 2 / 304.8;
-        var sillHeight = _viewModel.SillHeight / 304.8;
+        var diameter = Radius * 2 / 304.8;
+        var sillHeight = SillHeight / 304.8;
 
         // 获取墙体的标高
         var level = doc.GetElement(wall.LevelId) as Level;

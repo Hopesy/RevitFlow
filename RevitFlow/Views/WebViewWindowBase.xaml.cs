@@ -8,25 +8,27 @@ using Microsoft.Web.WebView2.Core;
 
 namespace RevitFlow.Views;
 
-public partial class WebViewWindow : Window
+public partial class WebViewWindowBase : Window
 {
-    private readonly ILogger<WebViewWindow> _logger;
-    private ObservableObject? _viewModel;
+    private readonly ILogger<WebViewWindowBase> _logger;
+    private readonly ObservableObject _viewModel;
     private string _pageName = "index.html";
 
-    public WebViewWindow(ILogger<WebViewWindow> logger)
+    public WebViewWindowBase(ILogger<WebViewWindowBase> logger, ObservableObject viewModel)
     {
-        InitializeComponent();
         _logger = logger;
+        _viewModel = viewModel;
+        DataContext = viewModel;
+
+        InitializeComponent();
+
         Loaded += OnLoaded;
         Closed += OnClosed;
     }
 
-    public void SetViewModel(ObservableObject viewModel, string pageName = "index.html")
+    public void SetPageName(string pageName)
     {
-        _viewModel = viewModel;
         _pageName = pageName;
-        DataContext = viewModel;
     }
 
     private void OnClosed(object? sender, EventArgs e)
@@ -67,7 +69,7 @@ public partial class WebViewWindow : Window
 #endif
 
         WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
-        
+
         var webRoot = GetWebRootPath();
         WebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
             "revitflow.local", webRoot, CoreWebView2HostResourceAccessKind.Allow);
@@ -112,7 +114,7 @@ public partial class WebViewWindow : Window
         {
             var message = e.WebMessageAsJson;
             _logger.LogDebug("收到消息: {Message}", message);
-            
+
             var json = JsonDocument.Parse(message);
             var root = json.RootElement;
 
@@ -129,8 +131,6 @@ public partial class WebViewWindow : Window
 
     private void HandleMessage(string messageType, JsonElement payload)
     {
-        if (_viewModel == null) return;
-
         _logger.LogDebug("处理消息: {Type}", messageType);
 
         switch (messageType)
@@ -150,7 +150,7 @@ public partial class WebViewWindow : Window
 
     private void SetViewModelState(JsonElement payload)
     {
-        var vmType = _viewModel!.GetType();
+        var vmType = _viewModel.GetType();
 
         foreach (var prop in payload.EnumerateObject())
         {
@@ -172,7 +172,7 @@ public partial class WebViewWindow : Window
 
     private void InvokeCommand(string commandName, string? param)
     {
-        var vmType = _viewModel!.GetType();
+        var vmType = _viewModel.GetType();
         var commandProp = vmType.GetProperty(commandName + "Command");
 
         if (commandProp?.GetValue(_viewModel) is System.Windows.Input.ICommand command)

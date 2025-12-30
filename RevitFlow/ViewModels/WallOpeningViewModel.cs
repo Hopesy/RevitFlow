@@ -2,13 +2,15 @@ using Autodesk.Revit.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using RevitFlow.Services;
 
 namespace RevitFlow.ViewModels;
 
 public partial class WallOpeningViewModel : ObservableObject
 {
     private readonly ILogger<WallOpeningViewModel> _logger;
-    private ExternalEvent? _externalEvent;
+    private readonly ExternalEvent _externalEvent;
+    private readonly WallOpeningExternalEvent _handler;
 
     [ObservableProperty] private double _width = 1000;
     [ObservableProperty] private double _height = 2100;
@@ -16,17 +18,14 @@ public partial class WallOpeningViewModel : ObservableObject
     [ObservableProperty] private double _radius = 500;
     [ObservableProperty] private string _shape = "rectangle";
 
-    public WallOpeningViewModel(ILogger<WallOpeningViewModel> logger)
+    public WallOpeningViewModel(
+        ILogger<WallOpeningViewModel> logger,
+        ExternalEvent externalEvent,
+        WallOpeningExternalEvent handler)
     {
         _logger = logger;
-    }
-
-    /// <summary>
-    /// 设置外部事件
-    /// </summary>
-    public void SetExternalEvent(ExternalEvent externalEvent)
-    {
         _externalEvent = externalEvent;
+        _handler = handler;
     }
 
     [RelayCommand]
@@ -51,11 +50,12 @@ public partial class WallOpeningViewModel : ObservableObject
     {
         _logger.LogInformation("触发创建洞口外部事件");
 
-        if (_externalEvent == null)
-        {
-            _logger.LogError("外部事件未初始化");
-            return;
-        }
+        // 更新 handler 的参数
+        _handler.Width = Width;
+        _handler.Height = Height;
+        _handler.SillHeight = SillHeight;
+        _handler.Radius = Radius;
+        _handler.Shape = Shape;
 
         // 触发外部事件
         _externalEvent.Raise();
