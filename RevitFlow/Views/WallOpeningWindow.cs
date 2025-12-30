@@ -13,6 +13,6 @@ public class WallOpeningWindow : WebViewWindowBase
         WallOpeningViewModel viewModel)
         : base(logger, viewModel)
     {
-        SetPageName("index.html");
+        SetPageName("index.html?page=wall-opening");
     }
 }

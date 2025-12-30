@@ -13,6 +13,6 @@ public class SettingWindow : WebViewWindowBase
         SettingViewModel viewModel)
         : base(logger, viewModel)
     {
-        SetPageName("setting.html");
+        SetPageName("index.html?page=setting");
     }
 }

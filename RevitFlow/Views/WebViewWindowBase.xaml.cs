@@ -76,14 +76,17 @@ public partial class WebViewWindowBase : Window
 
         await InjectBridgeScriptAsync();
 
-        var pagePath = Path.Combine(webRoot, _pageName);
+        // 分离文件名和 URL 参数
+        var fileName = _pageName.Split('?')[0];
+        var pagePath = Path.Combine(webRoot, fileName);
+
         if (File.Exists(pagePath))
         {
             WebView.CoreWebView2.Navigate($"https://revitflow.local/{_pageName}");
         }
         else
         {
-            LoadingText.Text = $"页面不存在: {_pageName}";
+            LoadingText.Text = $"页面不存在: {fileName}";
             return;
         }
 
