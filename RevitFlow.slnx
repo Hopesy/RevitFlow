@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug R26" />
+    <BuildType Name="Release R26" />
+  </Configurations>
+  <Project Path="RevitFlow/RevitFlow.csproj" />
+</Solution>

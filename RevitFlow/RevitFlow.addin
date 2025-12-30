@@ -1,0 +1,15 @@
+﻿<RevitAddIns>
+    <AddIn Type="Application">
+        <Name>RevitFlow</Name>
+        <Assembly>RevitFlow\RevitFlow.dll</Assembly>
+        <AddInId>F6D1F805-8DF6-4407-8935-66946AF98B07</AddInId>
+        <FullClassName>RevitFlow.Application</FullClassName>
+        <VendorId>是十六碼</VendorId>
+        <VendorDescription>Revit架构设计流程插件</VendorDescription>
+        <VendorEmail></VendorEmail>
+    </AddIn>
+    <ManifestSettings>
+        <UseRevitContext>False</UseRevitContext>
+        <ContextName>RevitFlow</ContextName>
+    </ManifestSettings>
+</RevitAddIns>
