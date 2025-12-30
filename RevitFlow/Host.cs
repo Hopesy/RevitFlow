@@ -35,9 +35,12 @@ public static class Host
         // ViewModels
         builder.Services.AddTransient<WallOpeningViewModel>();
         builder.Services.AddTransient<SettingViewModel>();
-        
+
         // Views
         builder.Services.AddTransient<WebViewWindow>();
+
+        // Services
+        builder.Services.AddSingleton<Services.WallOpeningExternalEvent>();
 
         host = builder.Build();
         host.Start();

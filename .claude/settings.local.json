@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(rm:*)",
-      "Bash(ren:*)"
+      "Bash(ren:*)",
+      "WebSearch",
+      "WebFetch(domain:www.revitapidocs.com)"
     ]
   }
 }
