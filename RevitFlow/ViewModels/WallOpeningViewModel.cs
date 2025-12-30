@@ -12,22 +12,23 @@ public partial class WallOpeningViewModel : ObservableObject
     private readonly ExternalEvent _externalEvent;
     private readonly WallOpeningExternalEvent _handler;
 
-    [ObservableProperty] private double _width = 1000;
-    [ObservableProperty] private double _height = 2100;
-    [ObservableProperty] private double _sillHeight = 0;
-    [ObservableProperty] private double _radius = 500;
-    [ObservableProperty] private string _shape = "rectangle";
+    [ObservableProperty]
+    private double _width = 1000;
+    [ObservableProperty] 
+    private double _height = 2100;
+    [ObservableProperty]
+    private double _sillHeight = 0;
+    [ObservableProperty] 
+    private double _radius = 500;
+    [ObservableProperty] 
+    private string _shape = "rectangle";
 
-    public WallOpeningViewModel(
-        ILogger<WallOpeningViewModel> logger,
-        ExternalEvent externalEvent,
-        WallOpeningExternalEvent handler)
+    public WallOpeningViewModel(ILogger<WallOpeningViewModel> logger, WallOpeningExternalEvent handler)
     {
         _logger = logger;
-        _externalEvent = externalEvent;
         _handler = handler;
+        _externalEvent = ExternalEvent.Create(handler);
     }
-
     [RelayCommand]
     private void ApplyPreset(string preset)
     {

@@ -13,7 +13,7 @@ public class SettingCommand : IExternalCommand
         try
         {
             // 从容器获取 Window（自动注入 ViewModel）
-            var window = Host.GetService<SettingWindow>();
+            var window = Host.GetService<SettingView>();
             window.Title = "RevitFlow 设置";
             window.ShowDialog();
             return Result.Succeeded;

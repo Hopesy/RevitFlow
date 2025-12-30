@@ -20,7 +20,6 @@ public static class Host
             // 插件环境下默认的ContentRootPathRevit指向Revit.exe，因此这里需要修改为插件dll目录
             ContentRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
         });
-
         //【2】配置日志为Serilog（写入文件和控制台）
         builder.Logging.ClearProviders();
         var logDirectory = Path.Combine(builder.Environment.ContentRootPath, "Logs");
@@ -30,32 +29,24 @@ public static class Host
             .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
             .WriteTo.Console()
             .CreateLogger());
-
         //【3】注册服务
         // ViewModels
         builder.Services.AddTransient<WallOpeningViewModel>();
         builder.Services.AddTransient<SettingViewModel>();
 
         // Views
-        builder.Services.AddTransient<WallOpeningWindow>();
-        builder.Services.AddTransient<SettingWindow>();
+        builder.Services.AddTransient<WallOpeningView>();
+        builder.Services.AddTransient<SettingView>();
 
         // Services
         builder.Services.AddSingleton<Services.WallOpeningExternalEvent>();
-
-        // ExternalEvent（使用工厂方法创建）
-        builder.Services.AddSingleton(sp =>
-        {
-            var handler = sp.GetRequiredService<Services.WallOpeningExternalEvent>();
-            return Autodesk.Revit.UI.ExternalEvent.Create(handler);
-        });
 
         host = builder.Build();
         host.Start();
     }
     public static void Stop()
     {
-        //GetAwaiter()：获取 Task 的等待器;GetResult()：阻塞当前线程，直到StopAsync()完成
+        //GetAwaiter()：获取Task的等待器;GetResult()阻塞当前线程,直到StopAsync()完成
         host!.StopAsync().GetAwaiter().GetResult();
     }
     public static T GetService<T>() where T : class => host!.Services.GetRequiredService<T>();

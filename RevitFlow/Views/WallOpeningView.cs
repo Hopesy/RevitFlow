@@ -6,9 +6,9 @@ namespace RevitFlow.Views;
 /// <summary>
 /// 墙体开洞窗口
 /// </summary>
-public class WallOpeningWindow : WebViewWindowBase
+public class WallOpeningView : WebViewWindowBase
 {
-    public WallOpeningWindow(
+    public WallOpeningView(
         ILogger<WebViewWindowBase> logger,
         WallOpeningViewModel viewModel)
         : base(logger, viewModel)

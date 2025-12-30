@@ -13,10 +13,9 @@ public class WallOpeningCommand : IExternalCommand
         try
         {
             // 从容器获取窗口（所有依赖自动注入）
-            var window = Host.GetService<WallOpeningWindow>();
+            var window = Host.GetService<WallOpeningView>();
             window.Title = "墙体开洞";
             window.Show();
-
             return Result.Succeeded;
         }
         catch (Exception ex)

@@ -19,11 +19,7 @@ public class WallOpeningExternalEvent : IExternalEventHandler
     public double Radius { get; set; } = 500;
     public string Shape { get; set; } = "rectangle";
 
-    public WallOpeningExternalEvent(ILogger<WallOpeningExternalEvent> logger)
-    {
-        _logger = logger;
-    }
-
+    public WallOpeningExternalEvent(ILogger<WallOpeningExternalEvent> logger) =>  _logger = logger;
     public void Execute(UIApplication app)
     {
         var uiDocument = app.ActiveUIDocument;
@@ -32,7 +28,6 @@ public class WallOpeningExternalEvent : IExternalEventHandler
             _logger.LogWarning("没有活动的文档");
             return;
         }
-
         try
         {
             // 输出当前的参数值

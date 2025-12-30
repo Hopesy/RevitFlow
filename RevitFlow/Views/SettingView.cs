@@ -6,9 +6,9 @@ namespace RevitFlow.Views;
 /// <summary>
 /// 设置窗口
 /// </summary>
-public class SettingWindow : WebViewWindowBase
+public class SettingView : WebViewWindowBase
 {
-    public SettingWindow(
+    public SettingView(
         ILogger<WebViewWindowBase> logger,
         SettingViewModel viewModel)
         : base(logger, viewModel)

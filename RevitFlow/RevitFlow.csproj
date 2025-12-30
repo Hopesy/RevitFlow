@@ -57,11 +57,6 @@
     <Resource Include="Resources\Icons\window.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-
   <!-- 编译前自动构建 Vue 前端 -->
   <Target Name="BuildVue" BeforeTargets="BeforeBuild">
     <Message Importance="high" Text="正在构建 Vue 前端..." />
