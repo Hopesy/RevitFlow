@@ -1,4 +1,4 @@
-<Window x:Class="RevitFlow.Views.WebViewWindowBase" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<Window x:Class="RevitFlow.Views.WebViewBase" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf" Title="RevitFlow" Width="420"
         Height="460" Background="#1a1a2e" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">

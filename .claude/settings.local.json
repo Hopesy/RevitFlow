@@ -5,7 +5,8 @@
       "Bash(ren:*)",
       "WebSearch",
       "WebFetch(domain:www.revitapidocs.com)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(git mv:*)"
     ]
   }
 }

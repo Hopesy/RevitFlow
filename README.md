@@ -27,7 +27,7 @@ RevitFlow/                    # C# Revit 插件项目
 │   └── SettingWindow.cs            # 设置窗口
 ├── Services/                 # 业务服务
 │   └── WallOpeningExternalEvent.cs # Revit 外部事件处理
-├── Web/                      # Vue 构建产物 (自动生成)
+├── Web/                      # Vue 构建产物 (build自动生成)
 │   ├── index.html
 │   ├── js/
 │   └── css/
@@ -66,14 +66,14 @@ SettingWindow      →  index.html?page=setting       →  SettingPage.vue
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      Revit 插件                              │
+│                      Revit 插件                             │
 │  ┌──────────┐    ┌─────────────┐    ┌──────────────────┐    │
-│  │ Command  │───▶│  ViewModel  │◀──▶│ WebViewWindow    │    │
+│  │ Command  │───▶│  ViewModel  │◀──▶│ WebViewWindow │    │
 │  │ (按钮)   │    │  (状态管理)  │    │   (WebView2)     │    │
 │  └──────────┘    └──────┬──────┘    └────────┬─────────┘    │
-│                         │                     │              │
-│                         │ 更新参数             │ 加载         │
-│                         ▼                     ▼              │
+│                         │                    │              │
+│                         │ 更新参数            │ 加载         │
+│                         ▼                    ▼              │
 │                  ┌─────────────┐    ┌──────────────────┐    │
 │                  │   Handler   │    │  Vue 页面 (Web/) │    │
 │                  │ (Revit API) │    │  useRevitBridge  │    │
@@ -140,6 +140,45 @@ private void CreateOpening()
   "messageType": "invokeCommand",
   "payload": { "command": "CreateOpening", "param": "door" }
 }
+```
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Vue 组件                                                  │
+│    <input v-model="state.width" @change="setState({...})" /> │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 2. useRevitBridge.js                                         │
+│    setState({ width: 1500 })                                │
+│    ↓                                                         │
+│    window.RevitBridge.invoke('setState', { width: 1500 })   │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 3. WebViewBase.OnWebMessageReceived                          │
+│    解析 JSON 消息                                             │
+│    ↓                                                         │
+│    HandleMessage("setState", { width: 1500 })               │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 4. WebViewBase.SetViewModelState                             │
+│    通过反射设置属性                                            │
+│    ↓                                                         │
+│    _viewModel.Width = 1500                                   │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 5. WallOpeningViewModel                                      │
+│    [ObservableProperty] private double _width;               │
+│    ↓                                                         │
+│    触发 PropertyChanged 事件                                  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ## 开发流程
