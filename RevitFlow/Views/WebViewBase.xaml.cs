@@ -28,6 +28,28 @@ public partial class WebViewBase : Window
         _pageName = pageName;
     }
 
+    /// <summary>
+    /// C# 主动向 JavaScript 发送数据
+    /// </summary>
+    public async Task SendToJavaScriptAsync(string functionName, object data)
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(data);
+            // 转义 JSON 中的特殊字符
+            json = json.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "\\r");
+
+            var script = $"if (window.{functionName}) {{ window.{functionName}('{json}'); }}";
+            await WebView.CoreWebView2.ExecuteScriptAsync(script);
+
+            _logger.LogDebug("发送数据到 JS: {FunctionName}", functionName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "发送数据到 JS 失败");
+        }
+    }
+
     private void OnClosed(object? sender, EventArgs e)
     {
         // 清理资源
@@ -155,6 +177,37 @@ public partial class WebViewBase : Window
                 var commandParam = payload.TryGetProperty("param", out var p) ? p.GetString() : null;
                 _logger.LogDebug("执行命令: {Command}", commandName);
                 InvokeCommand(commandName!, commandParam);
+                break;
+            case "log":
+                // 处理来自 JavaScript 的日志
+                var level = payload.TryGetProperty("level", out var lvl) ? lvl.GetString() : "info";
+                var logMessage = payload.GetProperty("message").GetString();
+                LogFromJavaScript(level!, logMessage!);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 处理来自 JavaScript 的日志消息
+    /// </summary>
+    private void LogFromJavaScript(string level, string message)
+    {
+        switch (level.ToLower())
+        {
+            case "debug":
+                _logger.LogDebug("[JS] {Message}", message);
+                break;
+            case "info":
+                _logger.LogInformation("[JS] {Message}", message);
+                break;
+            case "warn":
+                _logger.LogWarning("[JS] {Message}", message);
+                break;
+            case "error":
+                _logger.LogError("[JS] {Message}", message);
+                break;
+            default:
+                _logger.LogInformation("[JS] {Message}", message);
                 break;
         }
     }

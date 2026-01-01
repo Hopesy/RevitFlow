@@ -37,7 +37,7 @@ public class Application : IExternalApplication
     private void CreateRibbon(UIControlledApplication application)
     {
         var tab = application.AddRibbonTab("RevitFlow");
-        
+
         // 建模工具面板
         tab.AddRibbonPanel("建模工具", panel =>
         {
@@ -47,6 +47,14 @@ public class Application : IExternalApplication
                     new Uri("pack://application:,,,/RevitFlow;component/Resources/Icons/window.png"));
                 button.ToolTip = "在墙体上快速创建洞口";
                 button.Title = "墙体开洞";
+            });
+
+            panel.AddPushButton<CurveArrayCommand>(button =>
+            {
+                button.LargeImage = new BitmapImage(
+                    new Uri("pack://application:,,,/RevitFlow;component/Resources/Icons/array.png"));
+                button.ToolTip = "沿曲线阵列族实例";
+                button.Title = "曲线阵列";
             });
         });
 

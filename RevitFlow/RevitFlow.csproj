@@ -52,9 +52,15 @@
     <None Remove="Resources\Icons\setting.png" />
     <None Remove="Resources\Icons\start.png" />
     <None Remove="Resources\Icons\window.png" />
-    <Resource Include="Resources\Icons\setting.png" />
     <Resource Include="Resources\Icons\start.png" />
+    <Resource Include="Resources\Icons\array.png" />
     <Resource Include="Resources\Icons\window.png" />
+    <None Remove="Resources\Icons\array.png" />
+    <Resource Include="Resources\Icons\array.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\setting.png" />
   </ItemGroup>
 
   <!-- 编译前自动构建 Vue 前端 -->

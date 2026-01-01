@@ -26,10 +26,23 @@ export function useRevitBridge(defaultState = {}) {
     }
   }
 
+  /**
+   * 发送日志到 C# 端
+   */
+  function log(message, level = 'info') {
+    if (isInRevit) {
+      window.RevitBridge.invoke('log', { level, message })
+    } else {
+      // 开发环境下输出到控制台
+      console.log(`[${level}] ${message}`)
+    }
+  }
+
   return {
     isInRevit,
     state,
     setState,
-    invokeCommand
+    invokeCommand,
+    log
   }
 }

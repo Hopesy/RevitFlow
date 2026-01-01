@@ -33,13 +33,16 @@ public static class Host
         // ViewModels
         builder.Services.AddTransient<WallOpeningViewModel>();
         builder.Services.AddTransient<SettingViewModel>();
+        builder.Services.AddTransient<CurveArrayViewModel>();
 
         // Views
         builder.Services.AddTransient<WallOpeningView>();
         builder.Services.AddTransient<SettingView>();
+        builder.Services.AddTransient<CurveArrayView>();
 
         // Services
         builder.Services.AddSingleton<Services.WallOpeningExternalEvent>();
+        builder.Services.AddSingleton<Services.CurveArrayExternalEvent>();
 
         host = builder.Build();
         host.Start();

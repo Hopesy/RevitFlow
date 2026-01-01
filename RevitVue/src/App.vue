@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import WallOpeningPage from './components/WallOpeningPage.vue'
 import SettingPage from './components/SettingPage.vue'
+import CurveArrayPage from './components/CurveArrayPage.vue'
 
 const currentPage = ref('wall-opening')
 
@@ -19,6 +20,7 @@ onMounted(() => {
   <div class="app">
     <WallOpeningPage v-if="currentPage === 'wall-opening'" />
     <SettingPage v-else-if="currentPage === 'setting'" />
+    <CurveArrayPage v-else-if="currentPage === 'curve-array'" />
     <div v-else class="error">未知页面: {{ currentPage }}</div>
   </div>
 </template>
