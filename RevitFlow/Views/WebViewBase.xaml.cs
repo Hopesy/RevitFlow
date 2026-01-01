@@ -7,7 +7,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Web.WebView2.Core;
 
 namespace RevitFlow.Views;
-
+/*
+ * 四种通信方式
+ * 单向postmessage：js主动发送数据给c#-c#在回调函数里面根据消息类型更新后台数据或者执行命令
+ * 单向ExecuteScript:C#主动执行js代码-主动调用js的数据更新方法，传入的是c#获取的数据
+ * 双向hostobjects:将c#对象注入js,js调用c#代码-注入后js可以直接调用C#对象的方法和属性,而C#对象也可以通过事件或回调与js交互
+ * 双向WebMessagePipe:相互发送消息以及监听接收消息
+ */
 public partial class WebViewBase : Window
 {
     private readonly ILogger<WebViewBase> _logger;
@@ -38,10 +44,9 @@ public partial class WebViewBase : Window
             var json = JsonSerializer.Serialize(data);
             // 转义 JSON 中的特殊字符
             json = json.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "\\r");
-
             var script = $"if (window.{functionName}) {{ window.{functionName}('{json}'); }}";
+            //调用了JS中定义的全局函数，并传入数据更新状态,也可以拿到返回值的
             await WebView.CoreWebView2.ExecuteScriptAsync(script);
-
             _logger.LogDebug("发送数据到 JS: {FunctionName}", functionName);
         }
         catch (Exception ex)
@@ -111,7 +116,7 @@ public partial class WebViewBase : Window
         LoadingText.Visibility = Visibility.Collapsed;
         WebView.Visibility = Visibility.Visible;
     }
-    //【重点】JavaScript桥接机制:注入桥接脚本
+    //JavaScript桥接机制:注入桥接脚本
     /*
      * // 消息格式
      *  {
@@ -125,7 +130,7 @@ public partial class WebViewBase : Window
      * window.RevitBridge.invoke('setState', { width: 1500 });
      * window.RevitBridge.invoke('invokeCommand', { command: 'CreateOpening' });
      */
-    //注入桥接脚本后,Vue不需要直接调用WebView2 API,更简洁
+    //注入桥接脚本后,Vue不需要直接调用WebView2 API,更简洁,当然你不注入也是可以的
     private async Task InjectBridgeScriptAsync()
     {
         //定义桥接对象RevitBridge
@@ -186,10 +191,8 @@ public partial class WebViewBase : Window
                 break;
         }
     }
-
-    /// <summary>
-    /// 处理来自 JavaScript 的日志消息
-    /// </summary>
+    
+    // 处理来自 JavaScript 的日志消息
     private void LogFromJavaScript(string level, string message)
     {
         switch (level.ToLower())
