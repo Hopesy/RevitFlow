@@ -7,7 +7,9 @@
       "WebFetch(domain:www.revitapidocs.com)",
       "Bash(dir:*)",
       "Bash(git mv:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(powershell -Command \"$assembly = [System.Reflection.Assembly]::LoadFrom\\(''C:\\\\Users\\\\zhouh\\\\Desktop\\\\RevitFlow\\\\RevitFlow\\\\bin\\\\Debug R26\\\\net8.0-windows\\\\RevitFlow.dll''\\); $stream = $assembly.GetManifestResourceStream\\(''RevitFlow.g.resources''\\); $reader = [System.Resources.ResourceReader]::new\\($stream\\); $reader | ForEach-Object { $_Key }\")",
+      "Bash(powershell -Command \"$assembly = [System.Reflection.Assembly]::LoadFrom\\(''C:\\\\Users\\\\zhouh\\\\Desktop\\\\RevitFlow\\\\RevitFlow\\\\bin\\\\Debug R26\\\\net8.0-windows\\\\RevitFlow.dll''\\); $stream = $assembly.GetManifestResourceStream\\(''RevitFlow.g.resources''\\); $reader = New-Object System.Resources.ResourceReader\\($stream\\); $reader.GetEnumerator\\(\\) | ForEach-Object { $_Key }\")"
     ]
   }
 }

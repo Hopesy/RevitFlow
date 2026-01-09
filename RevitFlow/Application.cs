@@ -44,7 +44,7 @@ public class Application : IExternalApplication
             panel.AddPushButton<WallOpeningCommand>(button =>
             {
                 button.LargeImage = new BitmapImage(
-                    new Uri("pack://application:,,,/RevitFlow;component/Resources/Icons/window.png"));
+                    new Uri("pack://application:,,,/RevitFlow;component/resources/icons/window.png"));
                 button.ToolTip = "在墙体上快速创建洞口";
                 button.Title = "墙体开洞";
             });
@@ -52,7 +52,7 @@ public class Application : IExternalApplication
             panel.AddPushButton<CurveArrayCommand>(button =>
             {
                 button.LargeImage = new BitmapImage(
-                    new Uri("pack://application:,,,/RevitFlow;component/Resources/Icons/array.png"));
+                    new Uri("pack://application:,,,/RevitFlow;component/resources/icons/array.png"));
                 button.ToolTip = "沿曲线阵列族实例";
                 button.Title = "曲线阵列";
             });
@@ -64,7 +64,7 @@ public class Application : IExternalApplication
             panel.AddPushButton<SettingCommand>(button =>
             {
                 button.LargeImage = new BitmapImage(
-                    new Uri("pack://application:,,,/RevitFlow;component/Resources/Icons/setting.png"));
+                    new Uri("pack://application:,,,/RevitFlow;component/resources/icons/setting.png"));
                 button.ToolTip = "插件设置";
                 button.Title = "设置";
             });

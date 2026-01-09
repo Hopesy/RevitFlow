@@ -49,6 +49,7 @@
   </ItemGroup>
 
   <!-- 图标资源 -->
+  <!--WPF在编译时会将<Resource Include="Resources\Icons\**\*.png" />中的路径统一转换为小写-->
   <ItemGroup>
     <Resource Include="Resources\Icons\**\*.png" />
   </ItemGroup>
